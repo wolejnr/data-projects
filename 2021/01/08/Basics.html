@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Building the Boston Crime Database | DataEn3r</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Building the Boston Crime Database" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A description of data engineering projects worked on by Adewole Adewumi." />
+<meta property="og:description" content="A description of data engineering projects worked on by Adewole Adewumi." />
+<link rel="canonical" href="https://wolejnr.github.io/data-projects/2021/01/08/Basics.html" />
+<meta property="og:url" content="https://wolejnr.github.io/data-projects/2021/01/08/Basics.html" />
+<meta property="og:site_name" content="DataEn3r" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-08T00:00:00-06:00" />
+<script type="application/ld+json">
+{"url":"https://wolejnr.github.io/data-projects/2021/01/08/Basics.html","@type":"BlogPosting","headline":"Building the Boston Crime Database","dateModified":"2021-01-08T00:00:00-06:00","datePublished":"2021-01-08T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://wolejnr.github.io/data-projects/2021/01/08/Basics.html"},"description":"A description of data engineering projects worked on by Adewole Adewumi.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-projects/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://wolejnr.github.io/data-projects/feed.xml" title="DataEn3r" /><link rel="shortcut icon" type="image/x-icon" href="/data-projects/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-projects/">DataEn3r</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-projects/about/">About Me</a><a class="page-link" href="/data-projects/search/">Search</a><a class="page-link" href="/data-projects/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Building the Boston Crime Database</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-01-08T00:00:00-06:00" itemprop="datePublished">
+        Jan 8, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/wolejnr/data-projects/tree/master/_notebooks/Basics.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-projects/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/wolejnr/data-projects/master?filepath=_notebooks%2FBasics.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-projects/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/wolejnr/data-projects/blob/master/_notebooks/Basics.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-projects/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/Basics.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="c1"># Connect to dq database and create new database</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE crime_db;&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE SCHEMA crimes;&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+
+<span class="ansi-red-intense-fg ansi-bold">ProgrammingError</span>Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-25-227e93eec992&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-fg">      5</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>autocommit <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-green-intense-fg ansi-bold">True</span>
+<span class="ansi-green-fg">      6</span> cursor <span class="ansi-yellow-intense-fg ansi-bold">=</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>cursor<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 7</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>cursor<span class="ansi-yellow-intense-fg ansi-bold">.</span>execute<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;CREATE DATABASE crime_db;&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">      8</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>commit<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">      9</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>close<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ProgrammingError</span>: database &#34;crime_db&#34; already exists
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;boston.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">col_headers</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    
+    <span class="n">first_row</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="n">col_headers</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">first_row</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;incident_number&#39;, &#39;offense_code&#39;, &#39;description&#39;, &#39;date&#39;, &#39;day_of_the_week&#39;, &#39;lat&#39;, &#39;long&#39;]
+[&#39;1&#39;, &#39;619&#39;, &#39;LARCENY ALL OTHERS&#39;, &#39;2018-09-02&#39;, &#39;Sunday&#39;, &#39;42.35779134&#39;, &#39;-71.13937053&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="k">def</span> <span class="nf">get_col_value_set</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">col_index</span><span class="p">):</span>
+    <span class="n">col_values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">skipinitialspace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span> <span class="c1">#skip the header</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+            <span class="n">col_values</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">col_index</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">col_values</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="n">unique_col_values</span> <span class="o">=</span> <span class="n">get_col_value_set</span><span class="p">(</span><span class="s1">&#39;boston.csv&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Column&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;has&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_col_values</span><span class="p">),</span> <span class="s2">&quot;unique values:&quot;</span><span class="p">)</span>
+<span class="c1">#     print(unique_col_values)</span>
+        
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Column 0 has 298329 unique values:
+Column 1 has 219 unique values:
+Column 2 has 239 unique values:
+Column 3 has 1177 unique values:
+Column 4 has 7 unique values:
+Column 5 has 18177 unique values:
+Column 6 has 18177 unique values:
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">col_headers</span><span class="p">)</span>
+
+<span class="c1"># Determine the maximum length of a given column</span>
+<span class="n">col_values</span> <span class="o">=</span> <span class="n">get_col_value_set</span><span class="p">(</span><span class="s1">&#39;boston.csv&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">col_values</span><span class="p">:</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">:</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="n">val</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Max length:&quot;</span><span class="p">,</span> <span class="n">max_len</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Value with maximum length:&quot;</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;incident_number&#39;, &#39;offense_code&#39;, &#39;description&#39;, &#39;date&#39;, &#39;day_of_the_week&#39;, &#39;lat&#39;, &#39;long&#39;]
+Max length: 12
+Value with maximum length: -71.05260013
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Based on the analysis of each column value from the CSV file, in creating the database tables,</p>
+<ul>
+<li>incident_number will be integer</li>
+<li>offense_code will be varchar(4)</li>
+<li>description will be varchar(58)</li>
+<li>date will be date</li>
+<li>day_of_the_week will be an ENUM</li>
+<li>lat will be numeric</li>
+<li>long will be numeric</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE TYPE weekday AS ENUM(&#39;Sunday&#39;, &#39;Monday&#39;, &#39;Tuesday&#39;, &#39;Wednesday&#39;, &#39;Thursday&#39;, &#39;Friday&#39;, &#39;Saturday&#39;);&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+
+<span class="ansi-red-intense-fg ansi-bold">ProgrammingError</span>Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-29-89764a8e6bdb&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-fg">      5</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>autocommit <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-green-intense-fg ansi-bold">True</span>
+<span class="ansi-green-fg">      6</span> cursor <span class="ansi-yellow-intense-fg ansi-bold">=</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>cursor<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 7</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>cursor<span class="ansi-yellow-intense-fg ansi-bold">.</span>execute<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;CREATE TYPE weekday AS ENUM(&#39;Sunday&#39;, &#39;Monday&#39;, &#39;Tuesday&#39;, &#39;Wednesday&#39;, &#39;Thursday&#39;, &#39;Friday&#39;, &#39;Saturday&#39;);&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">      8</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>commit<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">      9</span> conn<span class="ansi-yellow-intense-fg ansi-bold">.</span>close<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ProgrammingError</span>: type &#34;weekday&#34; already exists
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># cursor.execute(&quot;CREATE SCHEMA crimes;&quot;)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    CREATE TABLE crimes.boston_crimes (</span>
+<span class="s2">        incident_number integer PRIMARY KEY,</span>
+<span class="s2">        offense_code VARCHAR(4),</span>
+<span class="s2">        description VARCHAR(58),</span>
+<span class="s2">        incidence_date DATE,</span>
+<span class="s2">        day_of_the_week weekday,</span>
+<span class="s2">        lat numeric,</span>
+<span class="s2">        long numeric</span>
+<span class="s2">    );</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;boston.csv&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">copy_expert</span><span class="p">(</span><span class="s2">&quot;COPY crimes.boston_crimes FROM STDIN WITH CSV HEADER;&quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># Revoke all privileges on the crimes_db by the public group </span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;REVOKE ALL ON SCHEMA public FROM public;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;REVOKE ALL ON DATABASE crime_db FROM public;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create two user groups</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE GROUP readonly NOLOGIN;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE GROUP readwrite NOLOGIN;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Grant CONNECT privilege to both user groups</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT CONNECT ON DATABASE crime_db TO readonly;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT CONNECT ON DATABASE crime_db TO readwrite;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Grant USAGE of crimes schema to both user groups</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT USAGE ON SCHEMA crimes TO readonly;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT USAGE ON SCHEMA crimes TO readwrite;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Grant group specific privileges to the user groups</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT SELECT ON ALL TABLES IN SCHEMA crimes TO readonly;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT SELECT, INSERT, DELETE, UPDATE ON ALL TABLES IN SCHEMA crimes TO readwrite;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create user called data_analyst and assign the user to readonly group</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE USER data_analyst WITH PASSWORD &#39;secret1&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT readonly TO data_analyst;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create user called data_scientist and assign the user to readwrite group</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE USER data_scientist WITH PASSWORD &#39;secret2&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT readwrite TO data_scientist;&quot;</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s2">&quot;crime_db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dq&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT grantee, privilege_type FROM information_schema.table_privileges WHERE grantee=&#39;readwrite&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(&#39;readwrite&#39;, &#39;INSERT&#39;),
+ (&#39;readwrite&#39;, &#39;SELECT&#39;),
+ (&#39;readwrite&#39;, &#39;UPDATE&#39;),
+ (&#39;readwrite&#39;, &#39;DELETE&#39;)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT grantee, privilege_type FROM information_schema.table_privileges WHERE grantee=&#39;readonly&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(&#39;readonly&#39;, &#39;SELECT&#39;)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><a class="u-url" href="/data-projects/2021/01/08/Basics.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-projects/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-projects/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-projects/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A description of data engineering projects worked on by Adewole Adewumi.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/data-projects/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/data-projects/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
